@@ -1,0 +1,60 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Restart pod in environment:"
+    echo " restartpod <environment> <pod name>"
+    echo " >restartpod env01 pod-name-1234"
+    echo ""
+    echo "Restartpod without confirmation:"
+    echo " restartpod -y <environment> <pod name>"
+    echo " >restartpod -y env01 pod-name-1234"
+    echo ""
+    echo "Help: "
+    echo " >restartpod -h"
+    echo ""
+    echo "Note:"
+    echo "If there is more than one pod (instance) of a microservice"
+    echo "and you can't delete the pod, you may have to delete the deployment"
+    echo "which holds those instances (pods)."
+    echo "Check the instruction lsdeploys and deldeploy"
+    echo ""
+    echo "Short for:"
+    echo " kubectl --namespace=<environment> delete pods/<pod name>"
+}
+
+restart_pod(){
+  kubectl --namespace=$1 delete pods/$2
+}
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  -y)
+    restart_pod $2 $3
+    ;;
+  *)
+    case $# in
+      2)
+        printf "Restart pod? (y/n):"
+        read -r -n 1 answer
+        case $answer in
+          y)
+            echo ""
+            echo "Restarting pod $2 in $1 environment:"
+            restart_pod $1 $2
+            ;;
+          *)
+            echo ""
+        esac
+        ;;
+      *)
+        show_help
+    esac
+esac
+

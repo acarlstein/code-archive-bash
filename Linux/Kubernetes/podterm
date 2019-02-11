@@ -1,0 +1,39 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Open a Shell for a pod in a specific environment:"
+    echo " podterm <environment> <pod name>"
+    echo " >podterm env01 pod-name-1234"
+    echo ""
+    echo "Shell commands examples:"
+    echo " # ps -ef"
+    echo " # env | grep DATA_RATE_SERVICE_URI"
+    echo " # hostname"
+    echo " # exit"
+    echo ""
+    echo "Help:"
+    echo " >podterm -h"
+    echo ""
+    echo "Short for:"
+    echo "kubectl --namespace=<environment> exec -it <pod name> sh"
+}
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      2)
+        echo "Pod Shell for pod $2 in environment $1:"
+        kubectl --namespace=$1 exec -it $2 sh
+        ;;
+      *)
+        show_help
+    esac
+esac

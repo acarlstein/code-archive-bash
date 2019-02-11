@@ -1,0 +1,53 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Delete deployment in environment:"
+    echo " deldeploy <environment> <deployment name>"
+    echo " >deldeploy env01 pod-name"
+    echo ""
+    echo "Delete deployment without confirmation:"
+    echo " deldeploy -y <environment> <deployment name>"
+    echo " >deldeploy -y env01 pod-name"
+    echo ""
+    echo "Help: "
+    echo " >deldeploy -h"
+    echo ""
+    echo "Short for:"
+    echo "kubectl --namespace=<environment> delete deployment <deployment name>"
+}
+
+restart_pod(){
+  kubectl --namespace=$1 delete deployment $2
+}
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  -y)
+    restart_pod $2 $3
+    ;;
+  *)
+    case $# in
+      2)
+        printf "delete deployment? (y/n):"
+        read -r -n 1 answer
+        case $answer in
+          y)
+            echo ""
+            echo "deleting deployment $2 in $1 environment:"
+            restart_pod $1 $2
+            ;;
+          *)
+            echo ""
+        esac
+        ;;
+      *)
+        show_help
+    esac
+esac

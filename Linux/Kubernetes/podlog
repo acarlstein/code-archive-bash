@@ -1,0 +1,78 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Show pod log:"
+    echo " podlog  <pod name>"
+    echo " >podlog pod-name-1234"
+    echo ""
+    echo "Show pod logs based on arguments:"
+    echo " podlog <arguments> <environment> <pod name>"
+    echo " >podlog -f env01 pod-name-1234"
+    echo ""
+    echo "Arguments:"
+    echo " -c, --container=\"\": Print the logs of this container"
+    echo "   -f, --follow[=false]: Specify if the logs should be streamed."
+    echo "       --limit-bytes=0: Maximum bytes of logs to return. Defaults to no limit."
+    echo "   -p, --previous[=false]: If true, print the logs for the previous instance of the container in a pod if it exists."
+    echo "       --since=0: Only return logs newer than a relative duration like 5s, 2m, or 3h. Defaults to all logs. Only one of since-time / since may be used."
+    echo "       --since-time=\"\": Only return logs after a specific date (RFC3339). Defaults to all logs. Only one of since-time / since may be used."
+    echo "       --tail=-1: Lines of recent log file to display. Defaults to -1, showing all log lines."
+    echo "       --timestamps[=false]: Include timestamps on each line in the log output"
+    echo " --alsologtostderr[=false]: log to standard error as well as files"
+    echo "       --certificate-authority=\"\": Path to a cert. file for the certificate authority."
+    echo "       --client-certificate=\"\": Path to a client certificate file for TLS."
+    echo "       --client-key=\"\": Path to a client key file for TLS."
+    echo "       --cluster=\"\": The name of the kubeconfig cluster to use"
+    echo "       --context=\"\": The name of the kubeconfig context to use"
+    echo "       --insecure-skip-tls-verify[=false]: If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure."
+    echo "       --kubeconfig=\"\": Path to the kubeconfig file to use for CLI requests."
+    echo "       --log-backtrace-at=:0: when logging hits line file:N, emit a stack trace"
+    echo "       --log-dir=\"\": If non-empty, write log files in this directory"
+    echo "       --log-flush-frequency=5s: Maximum number of seconds between log flushes"
+    echo "       --logtostderr[=true]: log to standard error instead of files"
+    echo "       --match-server-version[=false]: Require server version to match client version"
+    echo "       --namespace=\"\": If present, the namespace scope for this CLI request."
+    echo "       --password=\"\": Password for basic authentication to the API server."
+    echo "   -s, --server=\"\": The address and port of the Kubernetes API server"
+    echo "       --stderrthreshold=2: logs at or above this threshold go to stderr"
+    echo "       --token=\"\": Bearer token for authentication to the API server."
+    echo "       --user=\"\": The name of the kubeconfig user to use"
+    echo "       --username=\"\": Username for basic authentication to the API server."
+    echo "       --v=0: log level for V logs"
+    echo "          Set the level of log output to debug-level (0~4)"
+    echo "          Set the level of log output to trace-level (5~10)"
+    echo "       --vmodule=: comma-separated list of pattern=N settings for file-filtered logging "
+    echo ""
+    echo "Help:"
+    echo " >podlog -h"
+    echo ""
+    echo "Short for:"
+    echo " kubectl logs <pod name> <flags>"
+    echo " kubectl logs <flags> <pod name> --namespace=<environment>"
+}
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      0)
+       show_help
+       ;;
+      1)
+        kubectl logs $1 -v=9
+        ;;
+      *)
+       args=${@:1:$#-2}
+       env="${@:(-2):1}"
+       for pod_name; do true; done
+       echo "Log for $pod_name in environment $env using flags $args"
+       kubectl logs $args $pod_name --namespace=$env
+    esac
+esac

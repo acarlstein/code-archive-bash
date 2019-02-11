@@ -1,0 +1,43 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Create a temporary deployment (with a pod) based on the name provided:"
+    echo " createtemp <environment> <name>"
+    echo " >createtemp env01 client"
+    echo ""
+    echo "Create a temporary deployment (with a pod) using the default name \"client\""
+    echo " createtemp <environment>"
+    echo " >createtemp env01"
+    echo ""
+    echo "Note: Wait until prompt is provided."
+    echo ""
+    echo "Help: "
+    echo " >createtemp -h"
+    echo ""
+    echo "Short for:"
+    echo " kubectl run -it --rm=true client --image=tutum/curl --namespace <environment>"
+    echo " kubectl run -it --rm=true <name> --image=tutum/curl --namespace <environment>"
+}
+
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      1)
+        kubectl run -it --rm=true client --image=tutum/curl --namespace $1
+        ;;
+      2)
+        kubectl run -it --rm=true $2 --image=tutum/curl --namespace $1
+        ;;
+      *)
+        show_help
+    esac
+esac

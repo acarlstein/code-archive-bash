@@ -1,0 +1,45 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Copy files from/to pod in an environment:"
+    echo ""
+    echo "Copy from pod to local directory:"
+    echo "podcp <environment>/<pod name>:<source> <destination>"
+    echo " >podcp env01/pod-name-1234:/opt/tomcat/logs/some_data.log ./some_data.log"
+    echo ""
+    echo "Copy from local directory to pod:"
+    echo "podcp <source> <environment>/<pod name>:<destination>"
+    echo " >podcp ./some_data.log env01/pod-name-1234:/opt/tomcat/logs/some_data.log"
+    echo ""
+    echo "Using extra flags:"
+    echo "podcp <source> <environment>/<pod>:<destination> <flags>"
+    echo "podcp <environment>/<pod name>:<source> <destination> <flags>"
+    echo ""
+    echo "Help: "
+    echo "podcp -h"
+    echo ""
+    echo "Short for:"
+    echo "  kubectl cp <source> <destination> <flags>"
+}
+
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      [0-1])
+        show_help
+        ;;
+      *)
+        flags="${*:3}"
+        kubectl cp $1 $2 $flags
+        ;;
+    esac
+esac

@@ -1,0 +1,47 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Describe pod for specific environment:"
+    echo " descpod <environment> <pod name>"
+    echo " >descpod env01 pod-name-1234"
+    echo ""
+    echo "Describe all pods in specific environment:"
+    echo " descpod -a <environment>"
+    echo " >descpod -a env01"
+    echo ""
+    echo "Help: "
+    echo " >descpod -h"
+    echo ""
+    echo "Short for:"
+    echo " kubectl --namespace=<environment> describe pods"
+    echo " kubectl --namespace=<environment> describe pods/<pod name>"
+}
+
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  -a)
+    case $# in
+      2)
+        kubectl --namespace=$2 describe pods
+        ;;
+      *)
+      show_help
+    esac
+    ;;
+  *)
+    case $# in
+      2)
+        kubectl --namespace=$1 describe pods/$2
+        ;;
+      *)
+        show_help
+    esac
+esac

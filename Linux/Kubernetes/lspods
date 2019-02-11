@@ -1,0 +1,39 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+function show_help(){
+    echo "List pod(s) based on environment provided:"
+    echo "lspods <environment>"
+    echo " >lspods env01"
+    echo "lspods <environment> <pod name>"
+    echo " >lspods env01 pod-name-1234"
+    echo ""
+    echo "Help: "
+    echo " >lspods -h"
+    echo ""
+    echo "Short for:"
+    echo " kubectl --namespace=<namespace> get pods"
+    echo " kubectl --namespace=<namespace> get pods/<pod name>"
+ }
+
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      1)
+        kubectl --namespace=$1 get pods
+        ;;
+      2)
+        kubectl --namespace=$1 get pods/$2
+        ;;
+      *)
+       show_help
+    esac
+esac

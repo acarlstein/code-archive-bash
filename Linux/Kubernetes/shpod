@@ -1,0 +1,34 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Run a command line in the pod's shell:"
+    echo " shpod <environment> <pod name> <command line>"
+    echo " >shpod env01 pod-name-1234 ps -ef "
+    echo ""
+    echo "Help:"
+    echo " >shpod -h"
+    echo ""
+    echo "Short for:"
+    echo "kubectl exec <pod name> --namespace=<environment> -- <command line(s)>"
+}
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      [0-2])
+        show_help
+        ;;
+      *)
+        command_line="${*:3}"
+        kubectl exec $2 --namespace=$1 -- $command_line
+        ;;
+    esac
+esac

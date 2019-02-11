@@ -1,0 +1,39 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+function show_help(){
+    echo "List configmap(s) available based on environment provided:"
+    echo "lsconfigmaps <environment>"
+    echo " >lsconfigmaps env01"
+    echo "lsconfigmaps <environment> <configmaps name>"
+    echo " >lsconfigmaps env01 pod-name"
+    echo ""
+    echo "Help: "
+    echo " >lsconfigmaps -h"
+    echo ""
+    echo "Short for:"
+    echo " kubectl --namespace=<environment> get configmaps"
+    echo " kubectl --namespace=<environment> get configmaps/<configmaps name>"
+}
+
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      1)
+        kubectl --namespace=$1 get configmaps
+        ;;
+      2)
+        kubectl --namespace=$1 get configmaps/$2
+        ;;
+      *)
+       show_help
+    esac
+esac

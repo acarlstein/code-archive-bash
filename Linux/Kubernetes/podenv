@@ -1,0 +1,33 @@
+#!/bin/bash
+#Author: Alejandro Godofredo Carlstein Ramos Mejia
+#Disclaimer: All code is given WITHOUT ANY WARRANTY; 
+#            without even the implied warranty of MERCHANTABILITY
+#            or FITNESS FOR A PARTICULAR PURPOSE. 
+#Version: 1.0.0 
+
+show_help(){
+    echo "Show pod environment variables:"
+    echo "podenv <environment> <pod name>"
+    echo " >podenv env01 pod-name-1234"
+    echo ""
+    echo "Help: "
+    echo "podenv -h"
+    echo ""
+    echo "Short for:"
+    echo " kubectl --namespace=<environment> exec -it <pod name> env"
+}
+
+
+case $1 in
+  -h)
+    show_help
+    ;;
+  *)
+    case $# in
+      2)
+        kubectl --namespace=$1 exec -it $2 env
+        ;;
+      *)
+        show_help
+    esac
+esac
